@@ -1004,9 +1004,9 @@ defconfig: $(BUILD_DIR)/buildroot-config/conf outputmakefile
 
 define percent_defconfig
 # Override the BR2_DEFCONFIG from COMMON_CONFIG_ENV with the new defconfig
-%_defconfig: $(BUILD_DIR)/buildroot-config/conf $(1)/configs/%_defconfig outputmakefile
-	@$$(COMMON_CONFIG_ENV) BR2_DEFCONFIG=$(1)/configs/$$@ \
-		$$< --defconfig=$(1)/configs/$$@ $$(CONFIG_CONFIG_IN)
+%_defconfig: $(BUILD_DIR)/buildroot-config/conf $(1)/template/%_defconfig outputmakefile
+	@$$(COMMON_CONFIG_ENV) BR2_DEFCONFIG=$(1)/template/$$@ \
+		$$< --defconfig=$(1)/template/$$@ $$(CONFIG_CONFIG_IN)
 endef
 $(eval $(foreach d,$(call reverse,$(TOPDIR) $(BR2_EXTERNAL_DIRS)),$(call percent_defconfig,$(d))$(sep)))
 
@@ -1157,7 +1157,7 @@ help:
 # $(2): br2-external name, empty for bundled
 define list-defconfigs
 	@first=true; \
-	for defconfig in $(1)/configs/*_defconfig; do \
+	for defconfig in $(1)/template/*_defconfig; do \
 		[ -f "$${defconfig}" ] || continue; \
 		if $${first}; then \
 			if [ "$(2)" ]; then \
@@ -1206,7 +1206,7 @@ check-package:
 .gitlab-ci.yml: .gitlab-ci.yml.in
 	./support/scripts/generate-gitlab-ci-yml $< > $@
 
-include docs/manual/manual.mk
+include docs/buildroot/manual/manual.mk
 -include $(foreach dir,$(BR2_EXTERNAL_DIRS),$(sort $(wildcard $(dir)/docs/*/*.mk)))
 
 .PHONY: $(noconfig_targets)
