@@ -98,6 +98,12 @@ endmenu
 
 source "user/Config.in"
 
+source "service/Config.in"
+
+source "apps/Config.in"
+
+source "oem/Config.in"
+
 menu "Legacy Config (Dangerous)"
 	source "package/Config.in"
 	source "Config.in.legacy"
